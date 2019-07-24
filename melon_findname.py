@@ -4,7 +4,6 @@ from urllib.request import urlopen
 
 
 def melon_name():
-    result = []
     a = input("원하는 가수 또는 노래 제목을 입력하세요")
 
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"}
@@ -13,9 +12,10 @@ def melon_name():
     bsObj = BeautifulSoup(html, "html.parser")
     singers_name = bsObj.findAll("span", {"class": "checkEllipsis"})
     charts_name = bsObj.findAll("div", {"class": "ellipsis rank01"})
+    result = []
 
     print("입력하신 {}에 대한 내용을 뽑아왔어요".format(a))
-    # singer_chart = []
+    singer_chart = []
     # chart_name = []
     for i in range(len(singers_name)):
         # if a in singer_chart:
@@ -23,16 +23,18 @@ def melon_name():
         chart_name = charts_name[i].text.strip()
 
         if a in singer_chart or a in chart_name:
-            result = "{0:3d}위 {1} - {2}".format(i + 1, chart_name, singer_chart)
+            result += ["{0:3d}위 {1} - {2}".format(i + 1, chart_name, singer_chart)]
             # print("{0:3d}위 {1} - {2}".format(i + 1, chart_name, singer_chart))
+    if len(result) > 0:
+        for r in result:
+            print(r)
 
-        if len(result) > 0:
-            # print(result)
-            for r in result:
-                print(r)
-        else:
-            print("앗! "+a+"에 데이터가 없다네요.. 다시 한 번 찾아보시겠어요?")
+    else:
+        print("앗! " + a + "에 데이터가 없다네요.. 다시 한 번 찾아보시겠어요?")
 
+        # if a in singer_chart or a in chart_name:
+        #     print("{0:3d}위 {1} - {2}".format(i + 1, chart_name, singer_chart))
+        # if len(singer_chart):
         # if a not in singer_chart or a not in chart_name:
         #     print("ERROR")
         #     break
@@ -66,9 +68,15 @@ def melon_name():
         # else:
         #     print("저장이 안됐어요ㅠㅠ")
         #     break
-    print("파일 쓰기가 모두 완료되었습니다.")
-    file.close()
+    if len(result) > 0:
+        print("파일 쓰기가 모두 완료되었습니다.")
+        file.close()
+
+    else:
+        print("입력하신 "+a+"에 대한 데이터가 없어서 저장할 수가 없어요ㅠㅠ")
 
 
 if __name__ == "__main__":
     melon_name()
+
+
